@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Recipes App</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="script.js" defer></script>
+    </head>
+    <body>
+        <div class="mobile-container">
+            <header>
+                <input type="text" id="search-term" />
+                <button id="search"><i class="fas fa-search"></i></button>
+            </header>
+            <div class="fav-container">
+                <!-- <h3>Favorite Meals</h3> -->
+                <ul class="fav">
+                    <!-- <li>
+                        <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                    </li> -->
+                </ul>
+            </div>
+            <div class="btn-grp">
+
+                <button class="btn" onclick="showRandom()" id="randomBtn">Random Recipe</button>
+                <button class="btn" id="showAllBtn" onclick="showAll()">Show All Recipe</button>
+            </div>
+
+
+            <div class="meals" id="meals">
+                <!-- <div class="meal">
+                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxw"
+                    >                
+                    <div class="meal-data">
+                        <h3>Pasta <button class="btn btn-small" onclick="toggle(event)">+</button></h3>
+                        <h3>
+                            <i class="fa-regular fa-heart"></i>
+                        </h3>
+                    </div>
+                    <div class="description">
+
+                        <p>lorem ipsum</p>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <div class="popup-container hidden" id="meal-popup">
+            <div class="popup">
+                <button id="close-popup" class="close-popup">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="meal-info" id="meal-info"></div>
+            </div>
+        </div>
+        <script src="./app.js"></script>
+    </body>
+</html>
