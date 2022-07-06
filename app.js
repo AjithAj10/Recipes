@@ -1,4 +1,10 @@
 //https://www.themealdb.com/api/json/v1/1/search.php?f=b          - Api call 
+
+window.addEventListener('load', () => {
+    localStorage.clear();
+    favContainer.innerHTML = '';
+})
+
 let meals = document.querySelector('.meals');
 let data = [];
 const favContainer = document.querySelector('.fav-container');
@@ -7,23 +13,13 @@ const fav = async () => {
     const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
      data = await response.json();
      data = data.meals;
-     console.log(data);
-
-     for(let i=0; i<4;i++){
-     let randomNo = Math.floor(Math.random() * 33);
-
-     let item = ` <li>
-     <img src="${data[randomNo].strMealThumb}"
- </li>`
-     favContainer.innerHTML += item;
-     }
 
 }; fav();
 
 
 
 
-async function showRandom(){
+ function showRandom(){
 
    
    let randomNo = Math.floor(Math.random() * 33);
@@ -33,7 +29,7 @@ let meal = `<div class="meal">
 <div class="meal-data">
     <h3>${data[randomNo].strMeal}</h3>
     <h3>
-        <i class="fa-regular fa-heart"></i>
+        <i class="fa-regular fa-heart" id="${data[randomNo].idMeal}"></i>
     </h3>
 
 </div>
@@ -41,7 +37,7 @@ let meal = `<div class="meal">
 <p> <b> Category : </b>${data[randomNo].strCategory}</p>
 <p><b> Cuisine : </b> ${data[randomNo].strArea}</p>
 
-<button id="${data[randomNo].id}" class="btn small">Recipie</button>
+<button class="btn small">Recipie</button>
 
 <div class="description">
 
@@ -57,9 +53,7 @@ let meal = `<div class="meal">
   btn.addEventListener('click',toggler);
 
  function toggler(e){
-   
-     descr.innetHTML += `<p>ok</p>`
-    
+    console.log(e.target.id);
     descr.classList.toggle('show');
     if(descr.classList.contains('show')){
         e.target.textContent = 'hide';
@@ -68,15 +62,48 @@ let meal = `<div class="meal">
 
     }
 
-  }
+  };//End of Toggler
+
+const heartIcon = document.querySelector('.fa-heart');
+
+heartIcon.addEventListener('click', addToFav);
+ 
 }
 
 
+function addToFav(e){
 
+
+    e.target.classList.toggle("fa-solid");
+let id = e.target.id;
+
+let item = data.find(e =>id == e.idMeal );
+
+   localStorage.setItem('Fav',JSON.stringify( item.strMealThumb) );
+
+    // localStorage.setItem('Fav',JSON.stringify( item.strMealThumb ));
+
+renderFav();
+}
+
+function renderFav(){
+    let Local = JSON.parse( localStorage.getItem('Fav') ); 
+
+console.log(Local);
+if(Local != null){
+   
+        
+        let item = ` <li>
+        <img src="${Local}"
+    </li>`
+        favContainer.innerHTML += item;
+        
+    }
+};renderFav();
 //Show all
 
 
-async function showAll(){
+ function showAll(){
     meals.innerHTML = '';
 
    data.forEach((e) => {
@@ -88,8 +115,8 @@ async function showAll(){
  <div class="meal-data">
      <h3>${e.strMeal}</h3>
      <h3>
-         <i class="fa-regular fa-heart"></i>
-     </h3>
+         <i class="fa-regular fa-heart"></i> 
+              </h3>
  </div>
  <div class="description">
  
