@@ -1,13 +1,13 @@
 //https://www.themealdb.com/api/json/v1/1/search.php?f=b          - Api call 
 let meals = document.querySelector('.meals');
-
+let data = [];
 const favContainer = document.querySelector('.fav-container');
 
 const fav = async () => {
     const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
-    let data = await response.json();
+     data = await response.json();
      data = data.meals;
-     console.log(data[0]);
+     console.log(data);
 
      for(let i=0; i<4;i++){
      let randomNo = Math.floor(Math.random() * 33);
@@ -24,10 +24,8 @@ const fav = async () => {
 
 
 async function showRandom(){
-   const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
-  let data = await response.json();
-   data = data.meals;
-   console.log(data[0]);
+
+   
    let randomNo = Math.floor(Math.random() * 33);
 let meal = `<div class="meal">
 <img src="${data[randomNo].strMealThumb}"
@@ -59,13 +57,12 @@ let meal = `<div class="meal">
   btn.addEventListener('click',toggler);
 
  function toggler(e){
-     console.log(descr.classList);
-    //  console.log(data[randomNo]);
+   
      descr.innetHTML += `<p>ok</p>`
     
     descr.classList.toggle('show');
     if(descr.classList.contains('show')){
-        e.target.textContent = '-';
+        e.target.textContent = 'hide';
     }else{
         e.target.textContent = 'Recipie';
 
@@ -82,9 +79,6 @@ let meal = `<div class="meal">
 async function showAll(){
     meals.innerHTML = '';
 
-    const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
-   let data = await response.json();
-    data = data.meals;
    data.forEach((e) => {
 
   
