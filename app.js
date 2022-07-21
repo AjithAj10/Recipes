@@ -45,23 +45,17 @@ if(caller == 'all'){
     meals.innerHTML = meal;
 
 }
-}
 
-
- function showRandom(){
-
-   
-   let randomNo = Math.floor(Math.random() * 33);
-
-show(randomNo,'random');
-
- const btn = document.querySelector('.small');
-  const descr = document.querySelector('.description');
+const btn = document.querySelectorAll('.small');
+  const descr = document.querySelectorAll('.description');
  
-  btn.addEventListener('click',toggler);
+  btn.forEach(item => {
+      item.addEventListener('click',toggler);
+
+  })
 
  function toggler(e){
-    console.log(e.target.id);
+   const descr = e.target.parentNode.children[5];
     descr.classList.toggle('show');
     if(descr.classList.contains('show')){
         e.target.textContent = 'hide';
@@ -75,14 +69,33 @@ show(randomNo,'random');
 const heartIcon = document.querySelector('.fa-heart');
 
 heartIcon.addEventListener('click', addToFav);
+}
+
+
+ function showRandom(){
+
+   
+   let randomNo = Math.floor(Math.random() * 33);
+
+show(randomNo,'random');
  
 }
 
 const searchByName = async() => {
-    let food = document.getElementById('search-term');
+    let food = document.getElementById('search-term').value;
+    meals.innerHTML = "";
+food = food.toLowerCase();
 
-    const response = await fetch('');
-    data = await response.json();
+for(let i=0; i<data.length;i++){
+    
+    if (data[i].strMeal.split(" ")[0].toLowerCase() == food || data[i].strCategory.toLowerCase() == food){
+        show(i,'all');
+    }
+}
+
+
+
+
 }
 
 function addToFav(e){
