@@ -1,16 +1,23 @@
 //https://www.themealdb.com/api/json/v1/1/search.php?f=b          - Api call 
 
 window.addEventListener('load', () => {
-    localStorage.clear();
-    favContainer.innerHTML = '';
+    //localStorage.clear();
+    //favContainer.innerHTML = '';
 })
 
 let meals = document.querySelector('.meals');
 let data = [];
-const favContainer = document.querySelector('.fav-container');
+const favContainer = document.querySelector('.fav');
 
 const fav = async () => {
-    const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
+    var response;
+    try {
+        response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
+        
+    } catch (error) {
+        alert('Please check internet connection');
+        console.log(error);
+    }
      data = await response.json();
      data = data.meals;
 
@@ -81,20 +88,18 @@ show(randomNo,'random');
  
 }
 
-const searchByName = async() => {
+const searchByName = () => {
     let food = document.getElementById('search-term').value;
     meals.innerHTML = "";
 food = food.toLowerCase();
 
 for(let i=0; i<data.length;i++){
-    
+
+    //Search food by first name || by subCategory
     if (data[i].strMeal.split(" ")[0].toLowerCase() == food || data[i].strCategory.toLowerCase() == food){
         show(i,'all');
     }
 }
-
-
-
 
 }
 
@@ -105,8 +110,9 @@ function addToFav(e){
 let id = e.target.id;
 
 let item = data.find(e =>id == e.idMeal );
+let prevData = JSON.parse( localStorage.getItem('Fav') );
 
-   localStorage.setItem('Fav',JSON.stringify( [item ]) );
+prevData ? localStorage.setItem('Fav',JSON.stringify( [...prevData,item]) ) : localStorage.setItem('Fav',JSON.stringify( [item]) );
 
     // localStorage.setItem('Fav',JSON.stringify( item.strMealThumb ));
 
@@ -115,21 +121,54 @@ renderFav();
 
 function renderFav(){
     let Local = JSON.parse( localStorage.getItem('Fav') ); 
+    favContainer.innerHTML = '';
 
 console.log(Local);
 if(Local != null){
    
-        
-        let item = ` <li>
-        <img src="${Local.strMealThumb}"
+    for(i=0;i<Local.length;i++){
+        let item = ` <li onclick=favLi(event) >
+        <img src="${Local[i].strMealThumb}" id='${Local[i].idMeal}'>
     </li>`
         favContainer.innerHTML += item;
-        
+     }
     }
 };renderFav();
 //Show all
+const popUp = document.querySelector('.popup-container');
+const mealInfo = document.querySelector('.meal-info');
+const favLi = (e) => {
+    console.log(e.target.id);
+   
 
+    const localData = JSON.parse(localStorage.getItem('Fav'));
 
+    let key = localData.find(item => item.idMeal == e.target.id )
+
+    let meal = `<div class="meal">
+    <img src="${key.strMealThumb}">                
+    <div class="meal-data">
+        <h3>${key.strMeal}</h3>
+        <h3>
+            <i class="fa-regular fa-heart" id="${key.idMeal}"></i>
+        </h3>
+    
+    </div>
+    
+    <p> <b> Category : </b>${key.strCategory}</p>
+    <p><b> Cuisine : </b> ${key.strArea}</p>
+    
+    
+    <div class="descriptio">
+    
+    <p><b> Recipie : </b>${key.strInstructions}</p>
+    </div>
+    </div>`
+    mealInfo.innerHTML = meal;
+
+    popUp.classList.add('popup-show');
+
+}
  function showAll(){
     meals.innerHTML = '';
 
@@ -139,4 +178,14 @@ show(i,'all');
 }
 
 }
+let btn1 = document.getElementById('close-popup');
+console.log(btn1);
 
+btn1.addEventListener('click',() => {
+    alert(09998);
+});
+
+function closepop(){
+    console.log('fdf');
+    popUp.classList.remove('popup-show');
+}
