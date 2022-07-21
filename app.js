@@ -17,35 +17,43 @@ const fav = async () => {
 }; fav();
 
 
+function show(key,caller){
+    let meal = `<div class="meal">
+<img src="${data[key].strMealThumb}"
+>                
+<div class="meal-data">
+    <h3>${data[key].strMeal}</h3>
+    <h3>
+        <i class="fa-regular fa-heart" id="${data[key].idMeal}"></i>
+    </h3>
+
+</div>
+
+<p> <b> Category : </b>${data[key].strCategory}</p>
+<p><b> Cuisine : </b> ${data[key].strArea}</p>
+
+<button class="btn small">Recipie</button>
+
+<div class="description">
+
+<p><b> Recipie : </b>${data[key].strInstructions}</p>
+</div>
+</div>`
+if(caller == 'all'){
+ meals.innerHTML += meal;
+}else{
+    meals.innerHTML = meal;
+
+}
+}
 
 
  function showRandom(){
 
    
    let randomNo = Math.floor(Math.random() * 33);
-let meal = `<div class="meal">
-<img src="${data[randomNo].strMealThumb}"
->                
-<div class="meal-data">
-    <h3>${data[randomNo].strMeal}</h3>
-    <h3>
-        <i class="fa-regular fa-heart" id="${data[randomNo].idMeal}"></i>
-    </h3>
 
-</div>
-
-<p> <b> Category : </b>${data[randomNo].strCategory}</p>
-<p><b> Cuisine : </b> ${data[randomNo].strArea}</p>
-
-<button class="btn small">Recipie</button>
-
-<div class="description">
-
-<p><b> Recipie : </b>${data[randomNo].strInstructions}</p>
-</div>
-</div>`
-
- meals.innerHTML = meal;
+show(randomNo,'random');
 
  const btn = document.querySelector('.small');
   const descr = document.querySelector('.description');
@@ -70,6 +78,12 @@ heartIcon.addEventListener('click', addToFav);
  
 }
 
+const searchByName = async() => {
+    let food = document.getElementById('search-term');
+
+    const response = await fetch('');
+    data = await response.json();
+}
 
 function addToFav(e){
 
@@ -79,7 +93,7 @@ let id = e.target.id;
 
 let item = data.find(e =>id == e.idMeal );
 
-   localStorage.setItem('Fav',JSON.stringify( item.strMealThumb) );
+   localStorage.setItem('Fav',JSON.stringify( [item ]) );
 
     // localStorage.setItem('Fav',JSON.stringify( item.strMealThumb ));
 
@@ -94,7 +108,7 @@ if(Local != null){
    
         
         let item = ` <li>
-        <img src="${Local}"
+        <img src="${Local.strMealThumb}"
     </li>`
         favContainer.innerHTML += item;
         
@@ -106,26 +120,10 @@ if(Local != null){
  function showAll(){
     meals.innerHTML = '';
 
-   data.forEach((e) => {
-
+for(i =0; i<data.length;i++){
   
- let meal = `<div class="meal">
- <img src="${e.strMealThumb}"
- >                
- <div class="meal-data">
-     <h3>${e.strMeal}</h3>
-     <h3>
-         <i class="fa-regular fa-heart"></i> 
-              </h3>
- </div>
- <div class="description">
- 
- <p>${e.strInstructions}</p>
- </div>
- </div>`
- 
-  meals.innerHTML += meal;
-})
+show(i,'all');
+}
 
 }
 
