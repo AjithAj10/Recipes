@@ -1,31 +1,31 @@
-//https://www.themealdb.com/api/json/v1/1/search.php?f=b          - Api call 
+//https://www.themealdb.com/api/json/v1/1/search.php?f=b          - Api call
 
-window.addEventListener('load', () => {
-    //localStorage.clear();
-    //favContainer.innerHTML = '';
-})
+window.addEventListener("load", () => {
+  //localStorage.clear();
+  //favContainer.innerHTML = '';
+});
 
-let meals = document.querySelector('.meals');
+let meals = document.querySelector(".meals");
 let data = [];
-const favContainer = document.querySelector('.fav');
+const favContainer = document.querySelector(".fav");
 
 const fav = async () => {
-    var response;
-    try {
-        response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=b');
-        
-    } catch (error) {
-        alert('Please check internet connection');
-        console.log(error);
-    }
-     data = await response.json();
-     data = data.meals;
+  var response;
+  try {
+    response = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/search.php?f=b"
+    );
+  } catch (error) {
+    alert("Please check internet connection");
+    console.log(error);
+  }
+  data = await response.json();
+  data = data.meals;
+};
+fav();
 
-}; fav();
-
-
-function show(key,caller){
-    let meal = `<div class="meal">
+function show(key, caller) {
+  let meal = `<div class="meal">
 <img src="${data[key].strMealThumb}"
 >                
 <div class="meal-data">
@@ -45,147 +45,147 @@ function show(key,caller){
 
 <p><b> Recipie : </b>${data[key].strInstructions}</p>
 </div>
-</div>`
-if(caller == 'all'){
- meals.innerHTML += meal;
-}else{
+</div>`;
+  if (caller == "all") {
+    meals.innerHTML += meal;
+  } else {
     meals.innerHTML = meal;
+  }
 
-}
+  const btn = document.querySelectorAll(".small");
+  const descr = document.querySelectorAll(".description");
 
-const btn = document.querySelectorAll('.small');
-  const descr = document.querySelectorAll('.description');
- 
-  btn.forEach(item => {
-      item.addEventListener('click',toggler);
+  btn.forEach((item) => {
+    item.addEventListener("click", toggler);
+  });
 
-  })
-
- function toggler(e){
-   const descr = e.target.parentNode.children[5];
-    descr.classList.toggle('show');
-    if(descr.classList.contains('show')){
-        e.target.textContent = 'hide';
-    }else{
-        e.target.textContent = 'Recipie';
-
+  function toggler(e) {
+    const descr = e.target.parentNode.children[5];
+    descr.classList.toggle("show");
+    if (descr.classList.contains("show")) {
+      e.target.textContent = "hide";
+    } else {
+      e.target.textContent = "Recipie";
     }
+  } //End of Toggler
 
-  };//End of Toggler
+  const heartIcon = document.querySelector(".fa-heart");
 
-const heartIcon = document.querySelector('.fa-heart');
-
-heartIcon.addEventListener('click', addToFav);
+  heartIcon.addEventListener("click", addToFav);
 }
 
+function showRandom() {
+  let randomNo = Math.floor(Math.random() * 33);
 
- function showRandom(){
-
-   
-   let randomNo = Math.floor(Math.random() * 33);
-
-show(randomNo,'random');
- 
+  show(randomNo, "random");
 }
 
 const searchByName = () => {
-    let food = document.getElementById('search-term').value;
-    meals.innerHTML = "";
-food = food.toLowerCase();
+  let food = document.getElementById("search-term").value;
+  meals.innerHTML = "";
+  food = food.toLowerCase();
 
-for(let i=0; i<data.length;i++){
-
+  for (let i = 0; i < data.length; i++) {
     //Search food by first name || by subCategory
-    if (data[i].strMeal.split(" ")[0].toLowerCase() == food || data[i].strCategory.toLowerCase() == food){
-        show(i,'all');
+    if (
+      data[i].strMeal.split(" ")[0].toLowerCase() == food ||
+      data[i].strCategory.toLowerCase() == food
+    ) {
+      show(i, "all");
     }
+  }
+};
+
+function addToFav(e) {
+  e.target.classList.toggle("fa-solid");
+  let id = e.target.id;
+
+  let item = data.find((e) => id == e.idMeal);
+  let prevData = JSON.parse(localStorage.getItem("Fav"));
+
+  prevData
+    ? localStorage.setItem("Fav", JSON.stringify([...prevData, item]))
+    : localStorage.setItem("Fav", JSON.stringify([item]));
+
+  // localStorage.setItem('Fav',JSON.stringify( item.strMealThumb ));
+
+  renderFav();
 }
 
-}
+function renderFav() {
+  let Local = JSON.parse(localStorage.getItem("Fav"));
+  favContainer.innerHTML = "";
 
-function addToFav(e){
-
-
-    e.target.classList.toggle("fa-solid");
-let id = e.target.id;
-
-let item = data.find(e =>id == e.idMeal );
-let prevData = JSON.parse( localStorage.getItem('Fav') );
-
-prevData ? localStorage.setItem('Fav',JSON.stringify( [...prevData,item]) ) : localStorage.setItem('Fav',JSON.stringify( [item]) );
-
-    // localStorage.setItem('Fav',JSON.stringify( item.strMealThumb ));
-
-renderFav();
-}
-
-function renderFav(){
-    let Local = JSON.parse( localStorage.getItem('Fav') ); 
-    favContainer.innerHTML = '';
-
-console.log(Local);
-if(Local != null){
-   
-    for(i=0;i<Local.length;i++){
-        let item = ` <li onclick=favLi(event) >
+  console.log(Local);
+  if (Local != null) {
+    for (i = 0; i < Local.length; i++) {
+      let item = ` <li onclick=favLi(event) >
         <img src="${Local[i].strMealThumb}" id='${Local[i].idMeal}'>
-    </li>`
-        favContainer.innerHTML += item;
-     }
+    </li>`;
+      favContainer.innerHTML += item;
     }
-};renderFav();
-//Show all
-const popUp = document.querySelector('.popup-container');
-const mealInfo = document.querySelector('.meal-info');
+  }
+}
+renderFav();
+
+// fav Detail page
+// const popUp = document.querySelector(".popup-container");
+// const mealInfo = document.querySelector(".meal-info");
 const favLi = (e) => {
-    console.log(e.target.id);
+  console.log(e.target.id);
+
+  const localData = JSON.parse(localStorage.getItem("Fav"));
+
+  let key = localData.find((item) => item.idMeal == e.target.id);
+//console.log(key);
+  let meal = `<div class="meal">
+    <img src="${key.strMealThumb}">                
+        <div class="meal-data">
+        <h3>${key.strMeal}</h3>
    
 
-    const localData = JSON.parse(localStorage.getItem('Fav'));
+</div>
 
-    let key = localData.find(item => item.idMeal == e.target.id )
+<p> <b> Category : </b>${key.strCategory}</p>
+<p><b> Cuisine : </b> ${key.strArea}</p>
 
-    let meal = `<div class="meal">
-    <img src="${key.strMealThumb}">                
-    <div class="meal-data">
-        <h3>${key.strMeal}</h3>
-        <h3>
-            <i class="fa-regular fa-heart" id="${key.idMeal}"></i>
-        </h3>
-    
-    </div>
-    
-    <p> <b> Category : </b>${key.strCategory}</p>
-    <p><b> Cuisine : </b> ${key.strArea}</p>
-    
-    
-    <div class="descriptio">
-    
-    <p><b> Recipie : </b>${key.strInstructions}</p>
-    </div>
-    </div>`
-    mealInfo.innerHTML = meal;
+<button class="btn small">Recipie</button>
 
-    popUp.classList.add('popup-show');
+<div class="description">
 
-}
- function showAll(){
-    meals.innerHTML = '';
+<p><b> Recipie : </b>${key.strInstructions}</p>
+</div>
+</div>`;
 
-for(i =0; i<data.length;i++){
+    meals.innerHTML = meal;
+
+
+    const btn = document.querySelectorAll(".small");
+    const descr = document.querySelectorAll(".description");
   
-show(i,'all');
+    btn.forEach((item) => {
+      item.addEventListener("click", toggler);
+    });
+  
+    function toggler(e) {
+      const descr = e.target.parentNode.children[5];
+      descr.classList.toggle("show");
+      if (descr.classList.contains("show")) {
+        e.target.textContent = "hide";
+      } else {
+        e.target.textContent = "Recipie";
+      }
+    } //End of Toggler
+  
+   
+};
+
+//Show all
+function showAll() {
+  meals.innerHTML = "";
+
+  for (i = 0; i < data.length; i++) {
+    show(i, "all");
+  }
 }
 
-}
-let btn1 = document.getElementById('close-popup');
-console.log(btn1);
-
-btn1.addEventListener('click',() => {
-    alert(09998);
-});
-
-function closepop(){
-    console.log('fdf');
-    popUp.classList.remove('popup-show');
-}
